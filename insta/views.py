@@ -114,3 +114,27 @@ def follow(request, to_follow):
         follow_s = Follow(follower=request.user.profile, followed=user_profile3)
         follow_s.save()
         return redirect('user_profile', user_profile3.user.username)
+
+@login_required(login_url='login')
+def post_comment(request, id):
+    image = get_object_or_404(Post, pk=id)
+    is_liked = False
+    if image.likes.filter(id=request.user.id).exists():
+        is_liked = True
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            savecomment = form.save(commit=False)
+            savecomment.post = image
+            savecomment.user = request.user.profile
+            savecomment.save()
+            return HttpResponseRedirect(request.path_info)
+    else:
+        form = CommentForm()
+    params = {
+        'image': image,
+        'form': form,
+        'is_liked': is_liked,
+        'total_likes': image.total_likes()
+    }
+    return render(request, 'instagram/single_post.html', params)
