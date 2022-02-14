@@ -16,6 +16,7 @@ import dj_database_url
 import django_heroku
 from decouple import config,Csv
 import os
+import cloudinary_storage
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 MODE=config("MODE", default="dev")
 
@@ -43,10 +44,12 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'cloudinary_storage',
     'django.contrib.staticfiles',
     'insta',
     'bootstrap4',
     'crispy_forms',
+    'cloudinary',
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -85,7 +88,11 @@ WSGI_APPLICATION = 'instagram.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': config('CLOUD_NAME'),
+    'API_KEY': config('CLOUD_KEY'),
+    'API_SECRET': config('CLOUD_SECRET'),
+}
 if config('MODE')=="dev":
    DATABASES = {
        'default': {
@@ -141,9 +148,8 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
@@ -151,6 +157,7 @@ STATICFILES_DIRS = (
 )
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
