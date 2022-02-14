@@ -11,7 +11,7 @@ Users can sign up, login, view and post photos, search and follow other users.
 ## Screenshots 
 ###### Home page
  
-<img src=>
+[![instagra.png](https://i.postimg.cc/8sQnXwwR/instagra.png)](https://postimg.cc/kRscBQ0G)
  
 
 ## User Story  
